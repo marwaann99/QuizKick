@@ -1,0 +1,480 @@
+import React, { useState } from "react";
+
+const levels = [
+  {
+    title: "Level 1: World Cup & General",
+    questions: [
+      { question: "Who won the FIFA World Cup in 2018?", options: ["Germany", "Brazil", "France", "Argentina"], answer: "France" },
+      { question: "Which country has won the most World Cups?", options: ["Germany", "Italy", "Brazil", "Argentina"], answer: "Brazil" },
+      { question: "Who is the all-time top scorer in World Cup history?", options: ["Ronaldo (Brazil)", "Miroslav Klose", "Pelé", "Messi"], answer: "Miroslav Klose" },
+      { question: "Which country hosted the 2010 World Cup?", options: ["Germany", "South Africa", "Brazil", "France"], answer: "South Africa" },
+      { question: "Who scored the winning goal in the 2014 World Cup final?", options: ["Messi", "Götze", "Neymar", "Özil"], answer: "Götze" },
+      { question: "Which club has the most UEFA Champions League titles?", options: ["AC Milan", "Liverpool", "Bayern Munich", "Real Madrid"], answer: "Real Madrid" },
+      { question: "Which country hosted the 2022 FIFA World Cup?", options: ["USA", "Qatar", "Russia", "Japan"], answer: "Qatar" },
+      { question: "Which nation won the Euro 2016?", options: ["France", "Portugal", "Germany", "Italy"], answer: "Portugal" },
+      { question: "What is the nickname of the Brazilian national team?", options: ["La Albiceleste", "A Seleção", "Les Bleus", "Die Mannschaft"], answer: "A Seleção" },
+      { question: "Who won the Ballon d'Or in 2023?", options: ["Messi", "Haaland", "Mbappe", "Lewandowski"], answer: "Messi" },
+    ],
+  },
+  {
+    title: "Level 2: Premier League",
+    questions: [
+      { question: "Who won the Premier League in the 2022/23 season?", options: ["Arsenal", "Liverpool", "Man City", "Chelsea"], answer: "Man City" },
+      { question: "Which manager has won the most Premier League titles?", options: ["Pep Guardiola", "Alex Ferguson", "Jose Mourinho", "Arsène Wenger"], answer: "Alex Ferguson" },
+      { question: "Who holds the record for most goals in a single Premier League season?", options: ["Salah", "Haaland", "Shearer", "Kane"], answer: "Haaland" },
+      { question: "Which club went unbeaten in the 2003/04 Premier League season?", options: ["Chelsea", "Liverpool", "Arsenal", "Man United"], answer: "Arsenal" },
+      { question: "Which player has the most all-time Premier League assists?", options: ["Cesc Fàbregas", "Ryan Giggs", "Kevin De Bruyne", "Frank Lampard"], answer: "Ryan Giggs" },
+      { question: "Who was the top scorer in the Premier League 2019/20 season?", options: ["Aubameyang", "Vardy", "Salah", "Kane"], answer: "Vardy" },
+      { question: "Which club won the Premier League in 2015/16?", options: ["Leicester City", "Tottenham", "Man City", "Chelsea"], answer: "Leicester City" },
+      { question: "Which goalkeeper has the most clean sheets in Premier League history?", options: ["Petr Čech", "David De Gea", "Schmeichel", "Alisson"], answer: "Petr Čech" },
+      { question: "Which player scored the fastest Premier League hat-trick?", options: ["Sadio Mané", "Michael Owen", "Aguero", "Van Persie"], answer: "Sadio Mané" },
+      { question: "Which team has been relegated the most times from the Premier League?", options: ["Norwich", "West Brom", "Sunderland", "Fulham"], answer: "Norwich" },
+    ],
+  },
+  {
+    title: "Level 3: La Liga",
+    questions: [
+      { question: "Which club has won the most La Liga titles?", options: ["Real Madrid", "Barcelona", "Atlético Madrid", "Valencia"], answer: "Real Madrid" },
+      { question: "Who is La Liga's all-time top scorer?", options: ["Cristiano Ronaldo", "Raúl", "Messi", "Telmo Zarra"], answer: "Messi" },
+      { question: "Which club ended Real Madrid and Barcelona’s title dominance in 2013/14?", options: ["Sevilla", "Villarreal", "Atlético Madrid", "Valencia"], answer: "Atlético Madrid" },
+      { question: "Who won the La Liga title in the 2020/21 season?", options: ["Real Madrid", "Barcelona", "Atlético Madrid", "Sevilla"], answer: "Atlético Madrid" },
+      { question: "Which player holds the record for most assists in a single La Liga season?", options: ["Messi", "Xavi", "Modric", "Iniesta"], answer: "Messi" },
+      { question: "Which club is known as Los Che?", options: ["Valencia", "Villarreal", "Sevilla", "Betis"], answer: "Valencia" },
+      { question: "Who was Barcelona’s coach during their 2008–09 treble-winning season?", options: ["Luis Enrique", "Pep Guardiola", "Frank Rijkaard", "Ronald Koeman"], answer: "Pep Guardiola" },
+      { question: "Which stadium is home to Real Madrid?", options: ["Camp Nou", "Santiago Bernabéu", "Metropolitano", "Mestalla"], answer: "Santiago Bernabéu" },
+      { question: "Which team is nicknamed the Yellow Submarine?", options: ["Las Palmas", "Cádiz", "Villarreal", "Mallorca"], answer: "Villarreal" },
+      { question: "Who won the Pichichi Trophy in La Liga 2022/23?", options: ["Benzema", "Lewandowski", "Griezmann", "Aspas"], answer: "Lewandowski" },
+    ],
+  },
+  {
+    title: "Level 4: Serie A",
+    questions: [
+      { question: "Which club has won the most Serie A titles?", options: ["AC Milan", "Juventus", "Inter Milan", "Roma"], answer: "Juventus" },
+      { question: "Who won the Serie A title in the 2022/23 season?", options: ["Inter Milan", "Napoli", "AC Milan", "Juventus"], answer: "Napoli" },
+      { question: "Which player is the all-time top scorer in Serie A?", options: ["Silvio Piola", "Francesco Totti", "Roberto Baggio", "Del Piero"], answer: "Silvio Piola" },
+      { question: "Which team is nicknamed the Rossoneri?", options: ["AC Milan", "Inter Milan", "Napoli", "Lazio"], answer: "AC Milan" },
+      { question: "Which coach led Inter Milan to the treble in 2009/10?", options: ["Conte", "Spalletti", "Mourinho", "Inzaghi"], answer: "Mourinho" },
+      { question: "Who won the Ballon d'Or while playing for Juventus in 2003?", options: ["Pavel Nedvěd", "Del Piero", "Zidane", "Buffon"], answer: "Pavel Nedvěd" },
+      { question: "What is the home stadium of AS Roma?", options: ["San Siro", "Stadio Olimpico", "Juventus Stadium", "Maradona Stadium"], answer: "Stadio Olimpico" },
+      { question: "Which club plays at the Stadio Diego Armando Maradona?", options: ["Napoli", "Lazio", "Roma", "Fiorentina"], answer: "Napoli" },
+      { question: "Who was the top scorer in Serie A 2022/23?", options: ["Vlahović", "Immobile", "Osimhen", "Lautaro"], answer: "Osimhen" },
+      { question: "Which club wears black and blue and is based in Milan?", options: ["Inter Milan", "Juventus", "Atalanta", "Parma"], answer: "Inter Milan" },
+    ],
+  },
+  {
+    title: "Level 5: Bundesliga",
+    questions: [
+      { question: "Which club has won the most Bundesliga titles?", options: ["Dortmund", "Bayern Munich", "Werder Bremen", "Stuttgart"], answer: "Bayern Munich" },
+      { question: "Who won the Bundesliga in the 2022/23 season?", options: ["RB Leipzig", "Bayern Munich", "Borussia Dortmund", "Union Berlin"], answer: "Bayern Munich" },
+      { question: "Which player is the all-time top scorer in the Bundesliga?", options: ["Lewandowski", "Gerd Müller", "Klose", "Reus"], answer: "Gerd Müller" },
+      { question: "What is the nickname of Borussia Dortmund?", options: ["The Reds", "The Black and Yellows", "The Eagles", "The Lions"], answer: "The Black and Yellows" },
+      { question: "Which team plays at the Allianz Arena?", options: ["RB Leipzig", "Bayern Munich", "Frankfurt", "Dortmund"], answer: "Bayern Munich" },
+      { question: "Which Bundesliga club is based in the capital Berlin?", options: ["Hertha BSC", "Hamburg", "Stuttgart", "Mainz"], answer: "Hertha BSC" },
+      { question: "Who was the top scorer in the Bundesliga 2020/21 season?", options: ["Haaland", "Lewandowski", "André Silva", "Müller"], answer: "Lewandowski" },
+      { question: "Which German club has the nickname ‘Die Werkself’?", options: ["Leverkusen", "Mainz", "Augsburg", "Freiburg"], answer: "Leverkusen" },
+      { question: "Which club shocked the Bundesliga by winning the title in 2008/09?", options: ["Wolfsburg", "Dortmund", "Leverkusen", "Schalke"], answer: "Wolfsburg" },
+      { question: "Which club returned to the Bundesliga in 2022/23 after a long absence?", options: ["Schalke 04", "Hamburg", "Kaiserslautern", "Darmstadt"], answer: "Schalke 04" },
+    ],
+  },
+  {
+    title: "Level 6: Champions League",
+    questions: [
+      { question: "Which club has won the most UEFA Champions League titles?", options: ["AC Milan", "Liverpool", "Real Madrid", "Barcelona"], answer: "Real Madrid" },
+      { question: "Who scored a hat-trick in the 2022/23 semi-final for Manchester City against Real Madrid?", options: ["Haaland", "Mahrez", "Silva", "De Bruyne"], answer: "Silva" },
+      { question: "Which team won the Champions League in 2012?", options: ["Barcelona", "Chelsea", "Real Madrid", "Bayern Munich"], answer: "Chelsea" },
+      { question: "Which stadium hosted the 2021 Champions League final?", options: ["Wembley", "Atatürk", "Dragão", "Olympic Stadium"], answer: "Dragão" },
+      { question: "Who is the all-time top scorer in the Champions League?", options: ["Messi", "Lewandowski", "Cristiano Ronaldo", "Benzema"], answer: "Cristiano Ronaldo" },
+      { question: "Which club did Liverpool defeat in the 2005 UCL final?", options: ["Juventus", "AC Milan", "Inter Milan", "Real Madrid"], answer: "AC Milan" },
+      { question: "Who scored the winning goal in the 2014 final for Real Madrid?", options: ["Bale", "Ramos", "Ronaldo", "Di María"], answer: "Bale" },
+      { question: "Which team did Porto beat in the 2004 Champions League final?", options: ["Monaco", "Milan", "Chelsea", "Manchester United"], answer: "Monaco" },
+      { question: "Which manager has won the most UCL titles?", options: ["Ancelotti", "Ferguson", "Zidane", "Guardiola"], answer: "Ancelotti" },
+      { question: "Which club did Inter Milan beat in the 2010 UCL final?", options: ["Chelsea", "Manchester United", "Barcelona", "Bayern Munich"], answer: "Bayern Munich" },
+    ],
+  },
+  {
+    title: "Level 7: Africa Champions League",
+    questions: [
+      { question: "Which club has won the most CAF Champions League titles?", options: ["Al Ahly", "Zamalek", "TP Mazembe", "Esperance"], answer: "Al Ahly" },
+      { question: "Who won the CAF Champions League in 2022?", options: ["Wydad Casablanca", "Al Ahly", "Zamalek", "Mamelodi Sundowns"], answer: "Wydad Casablanca" },
+      { question: "Which country hosts the CAF Champions League final most often?", options: ["Egypt", "Morocco", "South Africa", "Tunisia"], answer: "Egypt" },
+      { question: "Which club is nicknamed 'The Red Devils' in African football?", options: ["Al Ahly", "Zamalek", "TP Mazembe", "Esperance"], answer: "Al Ahly" },
+      { question: "Who was the top scorer in the 2021 CAF Champions League?", options: ["Mohamed Sherif", "Sadio Mane", "Walid Soliman", "Toko Ekambi"], answer: "Mohamed Sherif" },
+      { question: "Which country has the most CAF Champions League titles?", options: ["Egypt", "Morocco", "South Africa", "Tunisia"], answer: "Egypt" },
+      { question: "Which club won the first CAF Champions League in 1964?", options: ["Oryx Douala", "Al Ahly", "Zamalek", "TP Mazembe"], answer: "Oryx Douala" },
+      { question: "Which club won the CAF Champions League in 2019?", options: ["Espérance de Tunis", "Wydad Casablanca", "Al Ahly", "TP Mazembe"], answer: "Espérance de Tunis" },
+      { question: "Which country’s clubs have the most CAF Confederation Cup wins?", options: ["Morocco", "Egypt", "South Africa", "Tunisia"], answer: "Morocco" },
+      { question: "Which player scored the winning goal in the 2020 CAF Champions League final?", options: ["Mohamed Sherif", "Trezeguet", "Mohamed Salah", "Sadio Mane"], answer: "Mohamed Sherif" },
+    ],
+  },
+  {
+    title: "Level 8: Famous Footballers",
+    questions: [
+      { question: "Which player is known as 'The King of Football'?", options: ["Pelé", "Maradona", "Messi", "Cristiano Ronaldo"], answer: "Pelé" },
+      { question: "Who scored 91 goals in a calendar year (2012)?", options: ["Messi", "Ronaldo", "Benzema", "Neymar"], answer: "Messi" },
+      { question: "Which footballer is nicknamed 'CR7'?", options: ["Cristiano Ronaldo", "Carlos Tevez", "Cesc Fabregas", "Claudio Ranieri"], answer: "Cristiano Ronaldo" },
+      { question: "Who won the Ballon d'Or six times?", options: ["Messi", "Ronaldo", "Xavi", "Iniesta"], answer: "Messi" },
+      { question: "Who scored the 'Hand of God' goal?", options: ["Maradona", "Pelé", "Messi", "Zidane"], answer: "Maradona" },
+      { question: "Which player captained Spain to their 2010 World Cup win?", options: ["Xavi", "Iniesta", "Casillas", "Puyol"], answer: "Iker Casillas" },
+      { question: "Which player holds the record for most goals in UEFA European Championship history?", options: ["Cristiano Ronaldo", "Michel Platini", "Alan Shearer", "Wayne Rooney"], answer: "Cristiano Ronaldo" },
+      { question: "Who is the all-time leading scorer for Barcelona?", options: ["Messi", "César Rodríguez", "Luis Suárez", "Neymar"], answer: "Messi" },
+      { question: "Who scored the winning goal in the 2010 World Cup final?", options: ["Iniesta", "Villa", "Torres", "Xavi"], answer: "Iniesta" },
+      { question: "Which player won the Golden Boot in the 2014 World Cup?", options: ["James Rodríguez", "Neymar", "Müller", "Ronaldo"], answer: "James Rodríguez" },
+    ],
+  },
+  {
+    title: "Level 9: Clubs & Stadiums",
+    questions: [
+      { question: "Which club plays at Old Trafford?", options: ["Manchester United", "Manchester City", "Liverpool", "Chelsea"], answer: "Manchester United" },
+      { question: "Which stadium is known as 'The Theatre of Dreams'?", options: ["Old Trafford", "Anfield", "Camp Nou", "Santiago Bernabéu"], answer: "Old Trafford" },
+      { question: "Which club is based at the Emirates Stadium?", options: ["Arsenal", "Chelsea", "Tottenham", "West Ham"], answer: "Arsenal" },
+      { question: "Which stadium is home to Bayern Munich?", options: ["Allianz Arena", "Signal Iduna Park", "Stade de France", "San Siro"], answer: "Allianz Arena" },
+      { question: "Which club plays at Anfield?", options: ["Liverpool", "Everton", "Chelsea", "Leeds"], answer: "Liverpool" },
+      { question: "Which stadium is the largest in Europe?", options: ["Camp Nou", "Wembley", "Santiago Bernabéu", "San Siro"], answer: "Camp Nou" },
+      { question: "Which club is nicknamed 'The Gunners'?", options: ["Arsenal", "Chelsea", "West Ham", "Tottenham"], answer: "Arsenal" },
+      { question: "Which club plays at the Santiago Bernabéu?", options: ["Real Madrid", "Barcelona", "Atlético Madrid", "Sevilla"], answer: "Real Madrid" },
+      { question: "Which stadium is known as 'Signal Iduna Park'?", options: ["Borussia Dortmund", "Bayern Munich", "RB Leipzig", "Schalke 04"], answer: "Borussia Dortmund" },
+      { question: "Which club has the nickname 'The Blues'?", options: ["Chelsea", "Manchester City", "Leicester City", "Everton"], answer: "Chelsea" },
+    ],
+  },
+  {
+    title: "Level 10: Football Rules & Records",
+    questions: [
+      { question: "How many players are on the field for each team during a match?", options: ["11", "10", "9", "12"], answer: "11" },
+      { question: "How long is a standard professional football match?", options: ["90 minutes", "80 minutes", "60 minutes", "120 minutes"], answer: "90 minutes" },
+      { question: "What color card means a player is sent off?", options: ["Red", "Yellow", "Green", "Blue"], answer: "Red" },
+      { question: "Which country won the first ever World Cup in 1930?", options: ["Uruguay", "Brazil", "Argentina", "Italy"], answer: "Uruguay" },
+      { question: "What is the maximum number of substitutions allowed in a standard FIFA match (post-2020)?", options: ["5", "3", "7", "6"], answer: "5" },
+      { question: "Which player holds the record for the fastest goal in World Cup history?", options: ["Hakan Şükür", "Pele", "Cristiano Ronaldo", "Kylian Mbappé"], answer: "Hakan Şükür" },
+      { question: "Which player has the most career goals in professional football?", options: ["Cristiano Ronaldo", "Pelé", "Romário", "Messi"], answer: "Cristiano Ronaldo" },
+      { question: "How many teams participate in the FIFA World Cup finals?", options: ["32", "24", "48", "16"], answer: "32" },
+      { question: "What is the distance for a standard penalty kick from the goal line?", options: ["12 yards", "10 yards", "15 yards", "18 yards"], answer: "12 yards" },
+      { question: "Which country is known for the ‘catenaccio’ defensive tactic?", options: ["Italy", "Germany", "Brazil", "England"], answer: "Italy" },
+    ],
+  },
+  {
+    title: "Level 11: Famous Coaches",
+    questions: [
+      { question: "Who coached FC Barcelona from 2008 to 2012?", options: ["Pep Guardiola", "Luis Enrique", "Tito Vilanova", "Johan Cruyff"], answer: "Pep Guardiola" },
+      { question: "Who managed the England national team during the 1966 World Cup?", options: ["Alf Ramsey", "Bobby Robson", "Gareth Southgate", "Ron Greenwood"], answer: "Alf Ramsey" },
+      { question: "Which coach won the UEFA Champions League with both AC Milan and Real Madrid?", options: ["Carlo Ancelotti", "Jose Mourinho", "Zinedine Zidane", "Guardiola"], answer: "Carlo Ancelotti" },
+      { question: "Who was the manager of Leicester City during their 2015/16 Premier League win?", options: ["Claudio Ranieri", "Nigel Pearson", "Brendan Rodgers", "Sam Allardyce"], answer: "Claudio Ranieri" },
+      { question: "Which coach is nicknamed 'The Special One'?", options: ["Jose Mourinho", "Alex Ferguson", "Pep Guardiola", "Diego Simeone"], answer: "Jose Mourinho" },
+      { question: "Who coached the German national team to the 2014 World Cup win?", options: ["Joachim Löw", "Jürgen Klinsmann", "Franz Beckenbauer", "Rudi Völler"], answer: "Joachim Löw" },
+      { question: "Who won the Ballon d'Or as a player and also managed the Dutch national team?", options: ["Johan Cruyff", "Marco van Basten", "Frank Rijkaard", "Louis van Gaal"], answer: "Johan Cruyff" },
+      { question: "Which coach won back-to-back Champions League titles with Real Madrid?", options: ["Zinedine Zidane", "Carlo Ancelotti", "Rafa Benítez", "Guardiola"], answer: "Zinedine Zidane" },
+      { question: "Who managed the Brazil team that won the 2002 World Cup?", options: ["Luiz Felipe Scolari", "Carlos Alberto Parreira", "Tite", "Dunga"], answer: "Luiz Felipe Scolari" },
+      { question: "Which Italian coach is famous for the 'catenaccio' style?", options: ["Helenio Herrera", "Marcello Lippi", "Carlo Ancelotti", "Fabio Capello"], answer: "Helenio Herrera" },
+    ],
+  },
+  {
+    title: "Level 12: Women's Football",
+    questions: [
+      { question: "Which country won the first FIFA Women’s World Cup in 1991?", options: ["USA", "Norway", "China", "Germany"], answer: "USA" },
+      { question: "Who is the all-time top scorer in Women's World Cup history?", options: ["Marta", "Birgit Prinz", "Abby Wambach", "Michelle Akers"], answer: "Marta" },
+      { question: "Which country won the Women’s World Cup in 2019?", options: ["USA", "Netherlands", "Sweden", "Germany"], answer: "USA" },
+      { question: "Which club is the most successful in UEFA Women’s Champions League history?", options: ["Olympique Lyonnais", "Barcelona", "Wolfsburg", "Arsenal"], answer: "Olympique Lyonnais" },
+      { question: "Who is the first female footballer to win the Ballon d'Or Féminin?", options: ["Ada Hegerberg", "Megan Rapinoe", "Lieke Martens", "Alex Morgan"], answer: "Ada Hegerberg" },
+      { question: "Which country hosted the 2015 Women’s World Cup?", options: ["Canada", "USA", "France", "Germany"], answer: "Canada" },
+      { question: "Which player scored the fastest goal in Women’s World Cup history?", options: ["Alex Morgan", "Christine Sinclair", "Nilla Fischer", "Lianne Sanderson"], answer: "Lianne Sanderson" },
+      { question: "Which country has won the most UEFA Women’s Euro titles?", options: ["Germany", "Sweden", "Norway", "England"], answer: "Germany" },
+      { question: "Who is the captain of the US Women's National Team as of 2023?", options: ["Megan Rapinoe", "Alex Morgan", "Lindsey Horan", "Tobin Heath"], answer: "Megan Rapinoe" },
+      { question: "Which league is known as the top women’s football league in England?", options: ["WSL", "NWSL", "Frauen-Bundesliga", "Division 1 Féminine"], answer: "WSL" },
+    ],
+  },
+  {
+    title: "Level 13: Transfers & Contracts",
+    questions: [
+      { question: "Which player had the highest transfer fee as of 2023?", options: ["Neymar", "Kylian Mbappé", "Phil Foden", "Erling Haaland"], answer: "Neymar" },
+      { question: "Which club sold Neymar to PSG in 2017?", options: ["Barcelona", "Real Madrid", "Santos", "Manchester United"], answer: "Barcelona" },
+      { question: "Who was the most expensive goalkeeper transfer in history?", options: ["Kepa Arrizabalaga", "Alisson Becker", "Ederson", "David de Gea"], answer: "Kepa Arrizabalaga" },
+      { question: "Which player moved from Dortmund to Manchester United in 2016?", options: ["Henrikh Mkhitaryan", "Jadon Sancho", "Marco Reus", "Christian Pulisic"], answer: "Henrikh Mkhitaryan" },
+      { question: "Who holds the record for the most expensive British player transfer?", options: ["Jack Grealish", "Harry Kane", "Raheem Sterling", "Jadon Sancho"], answer: "Jack Grealish" },
+      { question: "Which transfer broke the British transfer record in 2021?", options: ["Jack Grealish", "Jadon Sancho", "Harry Maguire", "Paul Pogba"], answer: "Jack Grealish" },
+      { question: "Who was the first player to earn a billion in career earnings?", options: ["Cristiano Ronaldo", "Lionel Messi", "Neymar", "David Beckham"], answer: "Cristiano Ronaldo" },
+      { question: "Which player moved to Real Madrid from Juventus in 2018?", options: ["Cristiano Ronaldo", "Gareth Bale", "Eden Hazard", "James Rodríguez"], answer: "Cristiano Ronaldo" },
+      { question: "Which player famously left Manchester United for Real Madrid in 2009?", options: ["Cristiano Ronaldo", "Wayne Rooney", "Carlos Tevez", "Paul Scholes"], answer: "Cristiano Ronaldo" },
+      { question: "Who was transferred from Barcelona to PSG in 2021?", options: ["Neymar", "Messi", "Suárez", "Rakitic"], answer: "Messi" },
+    ],
+  },
+  {
+    title: "Level 14: Football Tactics",
+    questions: [
+      { question: "What is the standard formation with 4 defenders, 4 midfielders, and 2 forwards?", options: ["4-4-2", "4-3-3", "3-5-2", "5-3-2"], answer: "4-4-2" },
+      { question: "Which famous coach popularized the tiki-taka style?", options: ["Pep Guardiola", "José Mourinho", "Carlo Ancelotti", "Jürgen Klopp"], answer: "Pep Guardiola" },
+      { question: "What does 'false nine' refer to in football?", options: ["A forward who drops deep", "A defensive midfielder", "A winger", "A goalkeeper"], answer: "A forward who drops deep" },
+      { question: "Which tactic focuses on quick counter-attacks after defending?", options: ["Counter-attack", "Tiki-taka", "Parking the bus", "High pressing"], answer: "Counter-attack" },
+      { question: "What is 'parking the bus' in football?", options: ["Defensive tactic with many players behind the ball", "Attacking tactic", "Offensive pressing", "Long ball strategy"], answer: "Defensive tactic with many players behind the ball" },
+      { question: "Who is famous for the gegenpressing tactic?", options: ["Jürgen Klopp", "Pep Guardiola", "Alex Ferguson", "José Mourinho"], answer: "Jürgen Klopp" },
+      { question: "Which formation uses three central defenders and two wing-backs?", options: ["3-5-2", "4-3-3", "4-4-2", "5-4-1"], answer: "3-5-2" },
+      { question: "Which position is primarily responsible for defending and stopping attacks?", options: ["Defender", "Midfielder", "Forward", "Goalkeeper"], answer: "Defender" },
+      { question: "Which tactical approach focuses on maintaining possession?", options: ["Tiki-taka", "Counter-attack", "Parking the bus", "Long ball"], answer: "Tiki-taka" },
+      { question: "Which player often controls the tempo of the game from midfield?", options: ["Playmaker", "Striker", "Goalkeeper", "Fullback"], answer: "Playmaker" },
+    ],
+  },
+  {
+    title: "Level 15: Historic Matches",
+    questions: [
+      { question: "Which World Cup final is known as the 'Miracle of Bern'?", options: ["1954", "1966", "1970", "1998"], answer: "1954" },
+      { question: "Which team won the 2005 Champions League final in a famous comeback?", options: ["Liverpool", "AC Milan", "Barcelona", "Real Madrid"], answer: "Liverpool" },
+      { question: "Which match is called the 'Battle of Santiago'?", options: ["Chile vs Italy 1962 World Cup", "Brazil vs Germany 2014 World Cup", "England vs Argentina 1986 World Cup", "France vs Brazil 1998 World Cup"], answer: "Chile vs Italy 1962 World Cup" },
+      { question: "Who scored the 'Goal of the Century' in 1986?", options: ["Maradona", "Pelé", "Messi", "Ronaldo"], answer: "Maradona" },
+      { question: "Which team did Leicester City beat to win the Premier League in 2016?", options: ["Tottenham", "Arsenal", "Chelsea", "Manchester United"], answer: "Tottenham" },
+      { question: "Which was the first European Championship final to be decided by penalties?", options: ["1976", "1980", "1968", "1992"], answer: "1976" },
+      { question: "Which club won the first ever Champions League (then European Cup)?", options: ["Real Madrid", "AC Milan", "Bayern Munich", "Liverpool"], answer: "Real Madrid" },
+      { question: "Which country won the 1998 World Cup?", options: ["France", "Brazil", "Italy", "Germany"], answer: "France" },
+      { question: "Which club won the treble in 1999?", options: ["Manchester United", "Barcelona", "Inter Milan", "Bayern Munich"], answer: "Manchester United" },
+      { question: "Which country hosted the 1982 World Cup?", options: ["Spain", "Mexico", "Italy", "Argentina"], answer: "Spain" },
+    ],
+  },
+  {
+    title: "Level 16: Football Legends",
+    questions: [
+      { question: "Which player is known as 'O Rei' (The King)?", options: ["Pelé", "Maradona", "Messi", "Ronaldo"], answer: "Pelé" },
+      { question: "Which Argentine football legend played for Napoli?", options: ["Maradona", "Messi", "Batistuta", "Higuaín"], answer: "Maradona" },
+      { question: "Which Portuguese football legend won five Ballon d'Or awards?", options: ["Cristiano Ronaldo", "Eusébio", "Luis Figo", "Ronaldo Nazário"], answer: "Cristiano Ronaldo" },
+      { question: "Who is known as 'The Atomic Flea'?", options: ["Lionel Messi", "Neymar", "Xavi", "Iniesta"], answer: "Lionel Messi" },
+      { question: "Which Dutch footballer is famous for the 'Cruyff Turn'?", options: ["Johan Cruyff", "Marco van Basten", "Dennis Bergkamp", "Ruud Gullit"], answer: "Johan Cruyff" },
+      { question: "Who scored over 800 career goals and was Brazilian?", options: ["Pelé", "Romário", "Neymar", "Ronaldo"], answer: "Pelé" },
+      { question: "Which footballer won the 1994 World Cup and played for Brazil?", options: ["Romário", "Rivaldo", "Ronaldinho", "Kaká"], answer: "Romário" },
+      { question: "Who is known as 'El Fenómeno'?", options: ["Ronaldo Nazário", "Cristiano Ronaldo", "Ronaldinho", "Zidane"], answer: "Ronaldo Nazário" },
+      { question: "Which Italian legend won the 2006 World Cup?", options: ["Fabio Cannavaro", "Francesco Totti", "Gianluigi Buffon", "Alessandro Del Piero"], answer: "Fabio Cannavaro" },
+      { question: "Which French football legend won the 1998 World Cup and 2000 Euros?", options: ["Zinedine Zidane", "Thierry Henry", "Michel Platini", "Didier Deschamps"], answer: "Zinedine Zidane" },
+    ],
+  },
+  {
+    title: "Level 17: Football Competitions",
+    questions: [
+      { question: "Which competition is known as the 'El Clásico'?", options: ["Real Madrid vs Barcelona", "Manchester Derby", "Milan Derby", "Derby della Madonnina"], answer: "Real Madrid vs Barcelona" },
+      { question: "Which tournament is the oldest international football competition?", options: ["Copa América", "UEFA Euro", "FIFA World Cup", "African Cup of Nations"], answer: "Copa América" },
+      { question: "Which country has won the most Copa América titles?", options: ["Uruguay", "Argentina", "Brazil", "Chile"], answer: "Uruguay" },
+      { question: "Which competition is contested by national teams in Africa?", options: ["Africa Cup of Nations", "Copa América", "UEFA Euro", "CONCACAF Gold Cup"], answer: "Africa Cup of Nations" },
+      { question: "What is the name of the North American football championship?", options: ["CONCACAF Gold Cup", "Copa América", "UEFA Euro", "Africa Cup of Nations"], answer: "CONCACAF Gold Cup" },
+      { question: "Which competition features the best clubs in Europe?", options: ["UEFA Champions League", "Europa League", "La Liga", "Serie A"], answer: "UEFA Champions League" },
+      { question: "Which competition is for clubs in South America?", options: ["Copa Libertadores", "UEFA Champions League", "CONCACAF Champions League", "CAF Champions League"], answer: "Copa Libertadores" },
+      { question: "Which country won the first UEFA European Championship?", options: ["Soviet Union", "West Germany", "Czechoslovakia", "Italy"], answer: "Soviet Union" },
+      { question: "Which cup is contested by English football clubs?", options: ["FA Cup", "Copa del Rey", "DFB-Pokal", "Coppa Italia"], answer: "FA Cup" },
+      { question: "Which competition was formerly known as the Inter-Cities Fairs Cup?", options: ["UEFA Europa League", "UEFA Champions League", "UEFA Conference League", "UEFA Super Cup"], answer: "UEFA Europa League" },
+    ],
+  },
+  {
+    title: "Level 18: Football Equipment",
+    questions: [
+      { question: "What brand manufactures the iconic Predator football boots?", options: ["Adidas", "Nike", "Puma", "Under Armour"], answer: "Adidas" },
+      { question: "Which company sponsors the Ballon d'Or trophy?", options: ["France Football", "FIFA", "UEFA", "Adidas"], answer: "France Football" },
+      { question: "What is the official size of a standard football?", options: ["Size 5", "Size 4", "Size 3", "Size 6"], answer: "Size 5" },
+      { question: "Which brand made the famous 'Mercurial' boots?", options: ["Nike", "Adidas", "Puma", "Reebok"], answer: "Nike" },
+      { question: "What material was traditionally used to make footballs?", options: ["Leather", "Rubber", "Plastic", "Synthetic"], answer: "Leather" },
+      { question: "Which company makes the official match balls for the UEFA Champions League?", options: ["Adidas", "Nike", "Puma", "Mitre"], answer: "Adidas" },
+      { question: "Which equipment is worn to protect goalkeepers?", options: ["Gloves", "Shin guards", "Cleats", "Jerseys"], answer: "Gloves" },
+      { question: "Which color card means a warning to a player?", options: ["Yellow", "Red", "Blue", "Green"], answer: "Yellow" },
+      { question: "What type of footwear is required to play on grass fields?", options: ["Cleats", "Running shoes", "Sandals", "Sneakers"], answer: "Cleats" },
+      { question: "What is the name of the protective gear worn on the shins?", options: ["Shin guards", "Ankle guards", "Knee pads", "Elbow pads"], answer: "Shin guards" },
+    ],
+  },
+  {
+    title: "Level 19: Football Records",
+    questions: [
+      { question: "Who holds the record for the most international goals?", options: ["Cristiano Ronaldo", "Ali Daei", "Pelé", "Marta"], answer: "Cristiano Ronaldo" },
+      { question: "Which club has the longest unbeaten run in the Premier League?", options: ["Arsenal", "Liverpool", "Chelsea", "Man City"], answer: "Arsenal" },
+      { question: "Who has the most appearances in Premier League history?", options: ["Gareth Barry", "Ryan Giggs", "Frank Lampard", "Paul Scholes"], answer: "Gareth Barry" },
+      { question: "Which player has won the most Champions League titles?", options: ["Paco Gento", "Cristiano Ronaldo", "Iker Casillas", "Xavi"], answer: "Paco Gento" },
+      { question: "What is the fastest goal scored in Premier League history?", options: ["Sadio Mané (7.69 seconds)", "Shane Long (7.69 seconds)", "Alan Shearer", "Thierry Henry"], answer: "Shane Long (7.69 seconds)" },
+      { question: "Which goalkeeper has the most clean sheets in Premier League?", options: ["Petr Čech", "David Seaman", "Edwin van der Sar", "David De Gea"], answer: "Petr Čech" },
+      { question: "Which player has won the most Ballon d’Or awards?", options: ["Lionel Messi", "Cristiano Ronaldo", "Michel Platini", "Johan Cruyff"], answer: "Lionel Messi" },
+      { question: "Which club has the record for the most goals scored in a single Premier League season?", options: ["Manchester City", "Liverpool", "Chelsea", "Arsenal"], answer: "Manchester City" },
+      { question: "Who holds the record for most goals in a single World Cup tournament?", options: ["Just Fontaine", "Ronaldo Nazário", "Miroslav Klose", "Gerd Müller"], answer: "Just Fontaine" },
+      { question: "Which club has the longest consecutive league title wins?", options: ["Bayern Munich", "Juventus", "Celtic", "Real Madrid"], answer: "Bayern Munich" },
+    ],
+  },
+  {
+    title: "Level 20: Miscellaneous",
+    questions: [
+      { question: "Which country is known as the birthplace of modern football?", options: ["England", "Brazil", "Germany", "Italy"], answer: "England" },
+      { question: "Who was the first player to win the FIFA World Player of the Year award?", options: ["Ronaldo Nazário", "Zinedine Zidane", "Rivaldo", "George Weah"], answer: "Ronaldo Nazário" },
+      { question: "Which player is famous for the 'Panenka' penalty?", options: ["Antonín Panenka", "Cristiano Ronaldo", "Lionel Messi", "Pelé"], answer: "Antonín Panenka" },
+      { question: "Which country’s league is called Eredivisie?", options: ["Netherlands", "Belgium", "Denmark", "Sweden"], answer: "Netherlands" },
+      { question: "What is the maximum length of a football pitch?", options: ["120 meters", "110 meters", "100 meters", "90 meters"], answer: "120 meters" },
+      { question: "Which country uses the '4-3-3' formation traditionally?", options: ["Spain", "Italy", "Germany", "France"], answer: "Spain" },
+      { question: "Which country won the most Olympic gold medals in men’s football?", options: ["Hungary", "Argentina", "Brazil", "Germany"], answer: "Hungary" },
+      { question: "Which continent does CONMEBOL represent?", options: ["South America", "Europe", "Africa", "Asia"], answer: "South America" },
+      { question: "Who is known as the 'Divine Ponytail'?", options: ["Roberto Baggio", "Zinedine Zidane", "Ronaldinho", "Diego Maradona"], answer: "Roberto Baggio" },
+      { question: "Which club is known as 'The Old Lady'?", options: ["Juventus", "AC Milan", "Inter Milan", "Roma"], answer: "Juventus" },
+    ],
+  },
+  {
+    title: "Level 21: Football Fan Culture",
+    questions: [
+      { question: "Which English club is famous for the 'You'll Never Walk Alone' anthem?", options: ["Liverpool", "Manchester United", "Arsenal", "Chelsea"], answer: "Liverpool" },
+      { question: "What is the name of the intense rivalry between Celtic and Rangers?", options: ["Old Firm", "North West Derby", "Derby della Madonnina", "Merseyside Derby"], answer: "Old Firm" },
+      { question: "Which club's supporters are known as the 'Kopites'?", options: ["Liverpool", "Everton", "Manchester City", "Chelsea"], answer: "Liverpool" },
+      { question: "Which country is known for the football chant 'Allez Les Bleus'?", options: ["France", "Belgium", "Canada", "Switzerland"], answer: "France" },
+      { question: "Which club has a mascot named 'Gunnersaurus'?", options: ["Arsenal", "Manchester United", "Chelsea", "Tottenham"], answer: "Arsenal" },
+      { question: "Which South American club is known for its intense fan base called 'La 12'?", options: ["Boca Juniors", "River Plate", "Flamengo", "Corinthians"], answer: "Boca Juniors" },
+      { question: "Which country celebrates 'La Bombonera' as a famous football stadium?", options: ["Argentina", "Brazil", "Chile", "Uruguay"], answer: "Argentina" },
+      { question: "Which football fan chant originated from the song 'Seven Nation Army'?", options: ["You’ll Never Walk Alone", "Seven Nation Army Chant", "Olé, Olé, Olé", "Blue Moon"], answer: "Seven Nation Army Chant" },
+      { question: "Which European club has a famous fan group called 'Ultras Sur'?", options: ["Real Madrid", "Barcelona", "Juventus", "AC Milan"], answer: "Real Madrid" },
+      { question: "Which country has the most football fan clubs worldwide?", options: ["England", "Brazil", "Spain", "Germany"], answer: "England" },
+    ],
+  },
+  {
+    title: "Level 22: Youth & Development",
+    questions: [
+      { question: "Which academy is famous for producing players like Messi and Xavi?", options: ["La Masia", "Clairefontaine", "Ajax Youth Academy", "Santos Academy"], answer: "La Masia" },
+      { question: "Which French academy produced players like Thierry Henry and Kylian Mbappé?", options: ["Clairefontaine", "INF Vichy", "Lazio Youth Academy", "Porto Youth Academy"], answer: "Clairefontaine" },
+      { question: "Which club is known for developing young talent in the Netherlands?", options: ["Ajax", "PSV", "Feyenoord", "AZ Alkmaar"], answer: "Ajax" },
+      { question: "Which Brazilian club's youth academy produced Neymar?", options: ["Santos", "Flamengo", "Palmeiras", "Corinthians"], answer: "Santos" },
+      { question: "Which English club’s academy is nicknamed 'The Academy'?", options: ["Manchester United", "Chelsea", "Arsenal", "Liverpool"], answer: "Manchester United" },
+      { question: "Which country has the 'Laureus Sport for Good' football development program?", options: ["Global", "USA", "UK", "Germany"], answer: "Global" },
+      { question: "Which football development program focuses on grassroots football in Africa?", options: ["FIFA Grassroots Program", "UEFA Foundation", "CAF Grassroots Initiative", "CONMEBOL Youth Development"], answer: "FIFA Grassroots Program" },
+      { question: "Which player debuted at 16 for Barcelona from their youth academy?", options: ["Lionel Messi", "Xavi", "Iniesta", "Sergio Busquets"], answer: "Lionel Messi" },
+      { question: "Which country has the most successful youth teams in FIFA U-17 World Cup history?", options: ["Nigeria", "Brazil", "Mexico", "Spain"], answer: "Nigeria" },
+      { question: "Which country hosts the Nike Academy for youth development?", options: ["England", "Spain", "USA", "Germany"], answer: "England" },
+    ],
+  },
+  {
+    title: "Level 23: Football & Media",
+    questions: [
+      { question: "Which company owns the Premier League broadcasting rights in the UK as of 2023?", options: ["Sky Sports", "BT Sport", "Amazon Prime", "BBC"], answer: "Sky Sports" },
+      { question: "Which football video game series is developed by EA Sports?", options: ["FIFA", "PES", "Football Manager", "Rocket League"], answer: "FIFA" },
+      { question: "Which TV show features fictional football club 'AFC Richmond'?", options: ["Ted Lasso", "The English Game", "Sunderland 'Til I Die", "Goal!"], answer: "Ted Lasso" },
+      { question: "Who is the famous football commentator known for 'Aguerooooo!' call?", options: ["Martin Tyler", "Clive Tyldesley", "Peter Drury", "Ian Darke"], answer: "Martin Tyler" },
+      { question: "Which documentary series covers Liverpool FC’s 2019/20 season?", options: ["The End of the Storm", "All or Nothing", "Sunderland 'Til I Die", "Take Us Home"], answer: "All or Nothing" },
+      { question: "Which football magazine is published monthly and known worldwide?", options: ["FourFourTwo", "Match", "World Soccer", "Kicker"], answer: "FourFourTwo" },
+      { question: "Which social media platform is popular for football highlight clips?", options: ["TikTok", "LinkedIn", "Twitter", "Reddit"], answer: "TikTok" },
+      { question: "Which footballer has the most Instagram followers as of 2023?", options: ["Cristiano Ronaldo", "Lionel Messi", "Neymar", "Kylian Mbappé"], answer: "Cristiano Ronaldo" },
+      { question: "Which TV network broadcasts the UEFA Champions League in the USA?", options: ["CBS", "NBC", "Fox Sports", "ESPN"], answer: "CBS" },
+      { question: "Which movie tells the story of England's 1966 World Cup win?", options: ["Goal! The Dream Begins", "The Damned United", "Bend It Like Beckham", "The King's Speech"], answer: "Goal! The Dream Begins" },
+    ],
+  },
+  {
+    title: "Level 24: Football Geography",
+    questions: [
+      { question: "Which country is the home of football club Boca Juniors?", options: ["Argentina", "Brazil", "Chile", "Uruguay"], answer: "Argentina" },
+      { question: "Which continent hosts the CAF Champions League?", options: ["Africa", "Europe", "South America", "Asia"], answer: "Africa" },
+      { question: "Which city is home to Real Madrid?", options: ["Madrid", "Barcelona", "Seville", "Valencia"], answer: "Madrid" },
+      { question: "Which country is known as 'La Roja' in football?", options: ["Spain", "Chile", "Mexico", "Argentina"], answer: "Spain" },
+      { question: "Which country is known for the 'Seleção' team?", options: ["Brazil", "Portugal", "Italy", "France"], answer: "Brazil" },
+      { question: "Which city hosts the football club Celtic FC?", options: ["Glasgow", "Edinburgh", "London", "Dublin"], answer: "Glasgow" },
+      { question: "Which country won the 2018 FIFA World Cup?", options: ["France", "Croatia", "Brazil", "Germany"], answer: "France" },
+      { question: "Which country is home to the club Ajax?", options: ["Netherlands", "Belgium", "Germany", "Denmark"], answer: "Netherlands" },
+      { question: "Which country is the home of the MLS (Major League Soccer)?", options: ["USA", "Canada", "Mexico", "Brazil"], answer: "USA" },
+      { question: "Which country won the UEFA Euro 2020?", options: ["Italy", "England", "France", "Portugal"], answer: "Italy" },
+    ],
+  },
+  {
+    title: "Level 25: Football Innovations & Future",
+    questions: [
+      { question: "What technology is used to determine if a ball crossed the goal line?", options: ["Goal-line technology", "VAR", "Offside technology", "Hawk-Eye"], answer: "Goal-line technology" },
+      { question: "What does VAR stand for in football?", options: ["Video Assistant Referee", "Virtual Assistant Referee", "Verified Assistant Referee", "Video Automated Review"], answer: "Video Assistant Referee" },
+      { question: "Which technology helps referees check offside decisions?", options: ["VAR", "Hawk-Eye", "Goal-line technology", "GPS tracking"], answer: "VAR" },
+      { question: "Which company created the Adidas 'Al Rihla' ball used in the 2022 World Cup?", options: ["Adidas", "Nike", "Puma", "Umbro"], answer: "Adidas" },
+      { question: "Which innovation tracks player movement and stamina during matches?", options: ["GPS tracking", "VAR", "Goal-line tech", "Referee mic"], answer: "GPS tracking" },
+      { question: "When was VAR first used in the FIFA World Cup?", options: ["2018", "2014", "2010", "2022"], answer: "2018" },
+      { question: "Which future technology is being tested to replace the traditional football?", options: ["Smart Ball", "Hover Ball", "Light Ball", "AI Ball"], answer: "Smart Ball" },
+      { question: "What is the term for robots playing football in competitions?", options: ["RoboCup", "TechCup", "AutoFootball", "CyberCup"], answer: "RoboCup" },
+      { question: "Which area of football is seeing growth due to esports?", options: ["FIFA video games", "Stadium design", "Referee technology", "Player training"], answer: "FIFA video games" },
+      { question: "Which country is leading in football analytics and data science?", options: ["England", "USA", "Germany", "Spain"], answer: "England" },
+    ],
+  },
+];
+
+// Main component
+export default function FootballTriviaGame() {
+  const [currentLevel, setCurrentLevel] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showScore, setShowScore] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const level = levels[currentLevel];
+  const question = level.questions[currentQuestionIndex];
+
+  const handleOptionClick = (option) => {
+    if (selectedOption) return; // prevent multiple clicks
+    setSelectedOption(option);
+    if (option === question.answer) {
+      setScore(score + 1);
+    }
+  };
+
+  const handleNext = () => {
+    setSelectedOption(null);
+    if (currentQuestionIndex + 1 < level.questions.length) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      // Level finished
+      if (currentLevel + 1 < levels.length) {
+        setShowScore(true);
+      } else {
+        // All levels finished
+        setShowScore(true);
+      }
+    }
+  };
+
+  const handleNextLevel = () => {
+    setCurrentLevel(currentLevel + 1);
+    setCurrentQuestionIndex(0);
+    setShowScore(false);
+    setSelectedOption(null);
+  };
+
+  return (
+    <div style={{ maxWidth: 600, margin: "auto", fontFamily: "Arial, sans-serif" }}>
+      <h1>Football Trivia Game</h1>
+      <h2>{level.title}</h2>
+
+      {!showScore ? (
+        <div>
+          <div>
+            <p>
+              Question {currentQuestionIndex + 1} / {level.questions.length}
+            </p>
+            <h3>{question.question}</h3>
+          </div>
+          <div>
+            {question.options.map((option) => (
+              <button
+                key={option}
+                onClick={() => handleOptionClick(option)}
+                disabled={!!selectedOption}
+                style={{
+                  display: "block",
+                  margin: "8px 0",
+                  padding: "10px",
+                  width: "100%",
+                  backgroundColor:
+                    selectedOption === option
+                      ? option === question.answer
+                        ? "green"
+                        : "red"
+                      : "",
+                  color: selectedOption === option ? "white" : "black",
+                  cursor: selectedOption ? "default" : "pointer",
+                }}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+          {selectedOption && (
+            <button onClick={handleNext} style={{ marginTop: 16 }}>
+              {currentQuestionIndex + 1 < level.questions.length ? "Next Question" : "Finish Level"}
+            </button>
+          )}
+        </div>
+      ) : (
+        <div>
+          <h3>
+            You scored {score} out of {level.questions.length} in this level.
+          </h3>
+          {currentLevel + 1 < levels.length ? (
+            <button onClick={handleNextLevel}>Next Level</button>
+          ) : (
+            <h3>Congratulations! You completed all levels!</h3>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
